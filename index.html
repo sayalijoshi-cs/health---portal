@@ -1,0 +1,296 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Community Health & Diabetes Risk Portal</title>
+  <!-- Bootstrap 5 CSS for Modern Styling -->
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+  <style>
+    body {
+      background-color: #f8f9fa;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+    }
+    .header-banner {
+      background: linear-gradient(135deg, #0d6efd, #0dcaf0);
+      color: white;
+      padding: 2.5rem 1rem;
+      border-radius: 0 0 15px 15px;
+    }
+    .card-custom {
+      border: none;
+      border-radius: 12px;
+      box-shadow: 0 4px 12px rgba(0,0,0,0.08);
+      margin-bottom: 1.5rem;
+    }
+    .result-box {
+      border-radius: 8px;
+      padding: 1rem;
+      margin-top: 1rem;
+      display: none;
+    }
+    .nav-pills .nav-link.active {
+      background-color: #0d6efd;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Header Banner -->
+  <div class="header-banner text-center mb-4">
+    <h1 class="fw-bold">🏥 Community Health Portal</h1>
+    <p class="mb-0">Interactive Health Metrics Calculator & Diabetes Screening Tool</p>
+  </div>
+
+  <div class="container mb-5" style="max-width: 800px;">
+    
+    <!-- Tab Navigation -->
+    <ul class="nav nav-pills nav-justified mb-4 card-custom bg-white p-2" id="healthTabs" role="tablist">
+      <li class="nav-item" role="presentation">
+        <button class="nav-link active fw-bold" id="metrics-tab" data-bs-toggle="pill" data-bs-target="#metrics" type="button" role="tab">
+          📊 Health Metrics Calculator
+        </button>
+      </li>
+      <li class="nav-item" role="presentation">
+        <button class="nav-link fw-bold" id="diabetes-tab" data-bs-toggle="pill" data-bs-target="#diabetes" type="button" role="tab">
+          🩺 Diabetes Risk Assessment
+        </button>
+      </li>
+    </ul>
+
+    <!-- Tab Content -->
+    <div class="tab-content" id="healthTabsContent">
+      
+      <!-- ==========================================
+           MODULE 1: HEALTH METRICS CALCULATOR
+           ========================================== -->
+      <div class="tab-pane fade show active" id="metrics" role="tabpanel">
+        <div class="card card-custom p-4 bg-white">
+          <h4 class="text-primary mb-3">Health Metrics Calculator</h4>
+          <form id="calcForm">
+            <div class="row g-3">
+              <div class="col-md-6">
+                <label class="form-label font-weight-bold">Age (years)</label>
+                <input type="number" id="age" class="form-control" min="1" max="110" value="25" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Gender</label>
+                <select id="gender" class="form-select">
+                  <option value="male">Male</option>
+                  <option value="female">Female</option>
+                </select>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Height (cm)</label>
+                <input type="number" id="height" class="form-control" min="50" max="250" value="165" required>
+              </div>
+              <div class="col-md-6">
+                <label class="form-label">Weight (kg)</label>
+                <input type="number" id="weight" class="form-control" min="10" max="250" value="65" required>
+              </div>
+              <div class="col-12">
+                <label class="form-label">Daily Physical Activity (minutes/day)</label>
+                <input type="number" id="activity" class="form-control" min="0" max="300" value="30" required>
+              </div>
+            </div>
+            <button type="button" class="btn btn-primary w-100 mt-4 py-2 fw-bold" onclick="calculateMetrics()">Calculate Health Metrics</button>
+          </form>
+
+          <!-- Metrics Output -->
+          <div id="metricsResult" class="result-box bg-light border">
+            <h5 class="fw-bold mb-3">Your Calculated Results:</h5>
+            <div class="row text-center">
+              <div class="col-md-4 mb-2">
+                <div class="p-2 border rounded bg-white">
+                  <small class="text-muted d-block">BMI Status</small>
+                  <strong id="bmiVal" class="fs-4 text-primary">0</strong>
+                  <span id="bmiBadge" class="badge bg-secondary d-block mt-1">Normal</span>
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="p-2 border rounded bg-white">
+                  <small class="text-muted d-block">Water Requirement</small>
+                  <strong id="waterVal" class="fs-4 text-info">0 L</strong>
+                  <small class="d-block text-muted">Liters / day</small>
+                </div>
+              </div>
+              <div class="col-md-4 mb-2">
+                <div class="p-2 border rounded bg-white">
+                  <small class="text-muted d-block">Baseline BMR</small>
+                  <strong id="bmrVal" class="fs-4 text-warning">0</strong>
+                  <small class="d-block text-muted">kcal / day</small>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+
+      <!-- ==========================================
+           MODULE 2: DIABETES RISK ASSESSMENT
+           ========================================== -->
+      <div class="tab-pane fade" id="diabetes" role="tabpanel">
+        <div class="card card-custom p-4 bg-white">
+          <h4 class="text-primary mb-2">Interactive Diabetes Screening</h4>
+          <p class="text-muted small mb-4">Answer these 5 simple questions to evaluate your lifestyle risk factors.</p>
+          
+          <form id="diabetesForm">
+            <!-- Q1 -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">1. What is your age category?</label>
+              <select id="q1" class="form-select">
+                <option value="0">Under 35 years</option>
+                <option value="1">35 – 49 years</option>
+                <option value="2">50 years or above</option>
+              </select>
+            </div>
+
+            <!-- Q2 -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">2. Family history of diabetes?</label>
+              <select id="q2" class="form-select">
+                <option value="0">No parents or siblings</option>
+                <option value="1">One parent</option>
+                <option value="2">Both parents or siblings</option>
+              </select>
+            </div>
+
+            <!-- Q3 -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">3. Weekly physical activity level?</label>
+              <select id="q3" class="form-select">
+                <option value="0">Regularly active (≥150 mins/week)</option>
+                <option value="2">Mostly inactive / Sedentary lifestyle</option>
+              </select>
+            </div>
+
+            <!-- Q4 -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">4. Waist measurement status / Belly fat:</label>
+              <select id="q4" class="form-select">
+                <option value="0">Normal / Slim waistline</option>
+                <option value="2">High belly fat / Increased waistline</option>
+              </select>
+            </div>
+
+            <!-- Q5 -->
+            <div class="mb-3">
+              <label class="form-label fw-bold">5. Daily sugary food / Soft drink intake frequency:</label>
+              <select id="q5" class="form-select">
+                <option value="0">Rarely (Less than twice a week)</option>
+                <option value="2">Frequently (Daily or almost daily)</option>
+              </select>
+            </div>
+
+            <button type="button" class="btn btn-primary w-100 mt-3 py-2 fw-bold" onclick="calculateDiabetesRisk()">Evaluate Risk Profile</button>
+          </form>
+
+          <!-- Risk Output -->
+          <div id="riskResult" class="result-box">
+            <h5 class="fw-bold mb-2">Assessment Outcome:</h5>
+            <div class="p-3 rounded text-white" id="riskBanner">
+              <h4 id="riskTitle" class="mb-1">Low Risk</h4>
+              <p id="riskDesc" class="mb-0 small">Description text here...</p>
+            </div>
+          </div>
+        </div>
+      </div>
+
+    </div>
+  </div>
+
+  <!-- JavaScript Logic -->
+  <script>
+    // 1. Logic for Health Metrics Calculator
+    function calculateMetrics() {
+      const age = parseFloat(document.getElementById('age').value);
+      const gender = document.getElementById('gender').value;
+      const height = parseFloat(document.getElementById('height').value);
+      const weight = parseFloat(document.getElementById('weight').value);
+      const activity = parseFloat(document.getElementById('activity').value);
+
+      if(!age || !height || !weight) {
+        alert("Please enter valid height, weight, and age.");
+        return;
+      }
+
+      // Calculate BMI
+      const heightM = height / 100;
+      const bmi = weight / (heightM * heightM);
+      let bmiCategory = "Normal";
+      let badgeClass = "bg-success";
+
+      if (bmi < 18.5) {
+        bmiCategory = "Underweight";
+        badgeClass = "bg-warning text-dark";
+      } else if (bmi >= 18.5 && bmi < 23.0) {
+        bmiCategory = "Normal";
+        badgeClass = "bg-success";
+      } else if (bmi >= 23.0 && bmi < 27.5) {
+        bmiCategory = "Overweight";
+        badgeClass = "bg-warning text-dark";
+      } else {
+        bmiCategory = "Obese";
+        badgeClass = "bg-danger";
+      }
+
+      // Calculate Water Intake
+      const water = (weight * 0.033) + ((activity / 30) * 0.35);
+
+      // Calculate BMR (Mifflin-St Jeor Equation)
+      let bmr = 0;
+      if (gender === 'male') {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) + 5;
+      } else {
+        bmr = (10 * weight) + (6.25 * height) - (5 * age) - 161;
+      }
+
+      // Update UI
+      document.getElementById('bmiVal').innerText = bmi.toFixed(1);
+      const badge = document.getElementById('bmiBadge');
+      badge.innerText = bmiCategory;
+      badge.className = `badge ${badgeClass} d-block mt-1`;
+
+      document.getElementById('waterVal').innerText = water.toFixed(2) + " L";
+      document.getElementById('bmrVal').innerText = Math.round(bmr);
+
+      document.getElementById('metricsResult').style.display = "block";
+    }
+
+    // 2. Logic for Diabetes Risk Self-Assessment
+    function calculateDiabetesRisk() {
+      const q1 = parseInt(document.getElementById('q1').value);
+      const q2 = parseInt(document.getElementById('q2').value);
+      const q3 = parseInt(document.getElementById('q3').value);
+      const q4 = parseInt(document.getElementById('q4').value);
+      const q5 = parseInt(document.getElementById('q5').value);
+
+      const totalScore = q1 + q2 + q3 + q4 + q5;
+
+      const riskBanner = document.getElementById('riskBanner');
+      const riskTitle = document.getElementById('riskTitle');
+      const riskDesc = document.getElementById('riskDesc');
+
+      if (totalScore <= 3) {
+        riskBanner.className = "p-3 rounded text-white bg-success";
+        riskTitle.innerText = "🟢 Low Risk (Score: " + totalScore + "/10)";
+        riskDesc.innerText = "Your lifestyle profile indicates a low immediate risk. Maintain a balanced diet and regular activity!";
+      } else if (totalScore <= 6) {
+        riskBanner.className = "p-3 rounded text-dark bg-warning";
+        riskTitle.innerText = "🟡 Moderate Risk (Score: " + totalScore + "/10)";
+        riskDesc.innerText = "Moderate risk factors detected. Consider increasing daily walking to 30 mins and reducing processed sugars.";
+      } else {
+        riskBanner.className = "p-3 rounded text-white bg-danger";
+        riskTitle.innerText = "🔴 High Risk (Score: " + totalScore + "/10)";
+        riskDesc.innerText = "High lifestyle risk detected. We strongly recommend scheduling a basic blood glucose check with a doctor.";
+      }
+
+      document.getElementById('riskResult').style.display = "block";
+    }
+  </script>
+
+  <!-- Bootstrap JS (for tab switching functionality) -->
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+  </html>
+  
